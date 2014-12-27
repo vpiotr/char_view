@@ -22,42 +22,42 @@ Benefits
 ================
 * allows compile-time string function calculations:
 
-    using namespace sbt;
-    
-    // check if string has prefix "std::"
-    constexpr bool HasStdPrefix(const char_view &value) {
-        return value.starts_with("std::"_cv);
-    }
+        using namespace sbt;
+        
+        // check if string has prefix "std::"
+        constexpr bool HasStdPrefix(const char_view &value) {
+            return value.starts_with("std::"_cv);
+        }
 
-    // assert calculated in compile time
-    bool TestPrefix() {
-        constexpr char_view s1("std::list");
-        Assert(HasStdPrefix(s1), "HasStdPrefix");
+        // assert calculated in compile time
+        bool TestPrefix() {
+            constexpr char_view s1("std::list");
+            Assert(HasStdPrefix(s1), "HasStdPrefix");
 
-        return true;
-    }
+            return true;
+        }
     
 * passing parameter as literal does not involve deep copying - has complexity = O(1) 
 
 * allows using strings in switch statement:
 
-    bool is_command_ok(const std::string &str) 
-    {
-        switch (char_view(str.c_str()).hash_code()) 
+        bool is_command_ok(const std::string &str) 
         {
-            case char_view("clear").hash_code():
-            case char_view("print").hash_code():
-            case char_view("list").hash_code():
-                break;
-            default:
-                return false;
+            switch (char_view(str.c_str()).hash_code()) 
+            {
+                case char_view("clear").hash_code():
+                case char_view("print").hash_code():
+                case char_view("list").hash_code():
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         }
-        return true;
-    }
     
 * implements special string literal for easy construction:
   
-    constexpr auto s1 = "Test string"_cv;       
+        constexpr auto s1 = "Test string"_cv;       
     
 
 Other features    
