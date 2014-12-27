@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1418756108 source:e:\progs\srepos\char_view\src\char_view.cpp
+	"char_view.h"
+
+1419683495 e:\progs\srepos\char_view\include\char_view.h
+	<iostream>
+	<stdexcept>
+	<type_traits>
+
+1419667847 source:e:\progs\srepos\char_view\test\testmain.cpp
+	<iostream>
+	<sstream>
+	<exception>
+	<algorithm>
+	<cctype>
+	<string>
+	"char_view.h"
+
