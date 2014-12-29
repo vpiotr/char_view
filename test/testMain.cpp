@@ -747,6 +747,27 @@ void testFunc(const char *name, Func f, bool &failed)
         return true;
     }
 
+    bool TestTrim() {
+        Assert(to_string("test1"_cv.trim()).length() == 5, "trim(non-white).len == 5");
+        Assert(to_string("  \t test1"_cv.trim()).length() == 5, "trim(left-white).len == 5");
+        Assert(to_string("test1  \t "_cv.trim()).length() == 5, "trim(right-white).len == 5");
+        Assert(to_string("  \t test1  \t "_cv.trim()).length() == 5, "trim(both-white).len == 5");
+        Assert(to_string("  \t\t "_cv.trim()).length() == 0, "trim(white).len == 0");
+        Assert(to_string(" "_cv.trim()).length() == 0, "trim(single-white).len == 0");
+        Assert(to_string(""_cv.trim()).length() == 0, "trim(empty-string).len == 0");
+
+        constexpr auto sw1 = L"  \t wide1  \t "_cv;
+        Assert(sw1.trim().size() == 5, "trim(wide-string).len == 5");
+
+        constexpr auto sw2a = u"  \t u16t1  \t "_cv;
+        Assert(sw2a.trim().size() == 5, "trim(u16t-string).len == 5");
+
+        constexpr auto sw2b = U"  \t u32t1  \t "_cv;
+        Assert(sw2b.trim().size() == 5, "trim(u32t-string).len == 5");
+
+        return true;
+    }
+
 #define TEST_FUNC(a) testFunc(#a, Test##a, errorFound)
 
 int main()
@@ -793,6 +814,7 @@ int main()
     TEST_FUNC(Generics3b);
 
     TEST_FUNC(UtilToString);
+    TEST_FUNC(Trim);
 
     if (errorFound) {
         cout << "Failures!\n";

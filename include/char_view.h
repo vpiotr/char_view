@@ -471,6 +471,26 @@ namespace details
                     last_index_of_nonmatching(content + 1, search_set, content_limit - 1, search_limit, offset + 1, offset):
                     last_index_of_nonmatching(content + 1, search_set, content_limit - 1, search_limit, offset + 1, found_pos);
 	}
+
+    template<typename charT>
+    constexpr const charT *white_chars() {
+        return " \t\r\n";
+    }
+
+    template<>
+    constexpr const wchar_t *white_chars<wchar_t>() {
+        return L" \t\r\n";
+    }
+
+    template<>
+    constexpr const char16_t *white_chars<char16_t>() {
+        return u" \t\r\n";
+    }
+
+    template<>
+    constexpr const char32_t *white_chars<char32_t>() {
+        return U" \t\r\n";
+    }
 }
 
 /**
@@ -607,7 +627,7 @@ public:
        return
               (
                 this_type::check_index_out_of_bounds(m_size, index)?
-                  this_type("",
+                  this_type(m_str,
                             this_type::signal_range_check_error(true, '\0')):
                   this_type(
                               m_str + index,
@@ -617,6 +637,60 @@ public:
                            )
               );
     }
+
+private:
+    // returns empty string if pos is = npos
+    constexpr this_type substr_npos_pos(size_t a_pos, size_t a_len) const {
+        return (a_pos == this_type::npos)?this_type(m_str,0):substr(a_pos, a_len);
+    }
+
+    // returns empty string if size is = npos, otherwise string including chars from front till last pos
+    constexpr this_type substr_npos_last(size_t a_last_pos) const {
+        return (a_last_pos == this_type::npos)?this_type(m_str,0):substr(0, a_last_pos + 1);
+    }
+
+public:
+    /// \defgroup trim
+    /// @brief Returns substring with omitted white space characters at front and at back
+    //@{
+    /// @brief Returns substring with omitted white space characters at front and at back
+    constexpr this_type trim() const {
+       return rtrim().ltrim();
+    }
+
+    /// Overload with charset provided
+    constexpr this_type trim(const charT *charset) const {
+       return rtrim(charset).ltrim(charset);
+    }
+    //@}
+
+    /// \defgroup ltrim
+    /// @brief Returns substring with omitted white space characters at front
+    //@{
+    /// @brief Returns substring with omitted white space characters at front
+    constexpr this_type ltrim() const {
+       return substr_npos_pos(find_first_not_of(details::white_chars<charT>()), m_size);
+    }
+
+    /// Overload with charset provided
+    constexpr this_type ltrim(const charT *charset) const {
+       return substr_npos_pos(find_first_not_of(charset), m_size);
+    }
+    //@}
+
+    /// \defgroup rtrim
+    /// @brief Returns substring with omitted white space characters at back
+    //@{
+    /// @brief Returns substring with omitted white space characters at back
+    constexpr this_type rtrim() const {
+       return substr_npos_last(find_last_not_of(details::white_chars<charT>()));
+    }
+
+    /// Overload with charset provided
+    constexpr this_type rtrim(const charT *charset) const {
+       return substr_npos_last(find_last_not_of(charset));
+    }
+    //@}
 
     /// Returns position of first character.
     constexpr const_iterator begin() const {
