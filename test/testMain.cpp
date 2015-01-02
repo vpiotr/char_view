@@ -750,12 +750,20 @@ void testFunc(const char *name, Func f, bool &failed)
     bool TestTrim() {
         Assert(to_string("test1"_cv.trim()).length() == 5, "trim(non-white).len == 5");
         Assert(to_string("tes 1"_cv.trim()).length() == 5, "trim(mid-white).len == 5");
+        Assert(to_string("test1"_cv.trim()) == "test1", "trim(non-white) == test-text");
+        Assert(to_string("t"_cv.trim()) == "t", "trim(non-white-1) == test-text");
         Assert(to_string("  \t test1"_cv.trim()).length() == 5, "trim(left-white).len == 5");
         Assert(to_string("  \t tes 1"_cv.trim()).length() == 5, "trim(left-mid-white).len == 5");
+        Assert(to_string("  \t test1"_cv.trim()) == "test1", "trim(left-white) == test-text");
+        Assert(to_string(" 1"_cv.trim()) == "1", "trim(left-white-1) == test-text");
         Assert(to_string("test1  \t "_cv.trim()).length() == 5, "trim(right-white).len == 5");
         Assert(to_string("t st1  \t "_cv.trim()).length() == 5, "trim(right-mid-white).len == 5");
+        Assert(to_string("test1  \t "_cv.trim()) == "test1", "trim(right-white) == test-text");
+        Assert(to_string("1 \t "_cv.trim()) == "1", "trim(right-white-1) == test-text");
         Assert(to_string("  \t test1  \t "_cv.trim()).length() == 5, "trim(both-white).len == 5");
         Assert(to_string("  \t t st1  \t "_cv.trim()).length() == 5, "trim(both-mid-white).len == 5");
+        Assert(to_string("  \t test1  \t "_cv.trim()) == "test1", "trim(both-white) == test-text");
+        Assert(to_string(" 1 "_cv.trim()) == "1", "trim(both-white-1) == test-text");
         Assert(to_string("  \t\t "_cv.trim()).length() == 0, "trim(white).len == 0");
         Assert(to_string(" "_cv.trim()).length() == 0, "trim(single-white).len == 0");
         Assert(to_string(""_cv.trim()).length() == 0, "trim(empty-string).len == 0");
